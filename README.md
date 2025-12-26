@@ -169,3 +169,16 @@ uv run fastapi dev main.py
 ... [How to use Python UV: The New BLAZINGLY FAST Package Manager (Quickstart Guide)](https://www.youtube.com/watch?v=QKVQQCx-gi4)
 
 This video is relevant because it provides a visual walkthrough of the `uv` commands used in this guide, helping you understand how `uv init`, `uv add`, and `uv run` work in practice.
+
+### Github setup
+```bash
+sudo apt update
+sudo apt install git
+
+git config --global user.name "GhoshIG19"
+git config --global user.email "ingkughosh@gmail.com"
+git init
+git add .
+git remote set-url origin https://github.com/GhoshIG19/chatbot.git
+git push --set-upstream origin master
+```
