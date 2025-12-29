@@ -42,6 +42,7 @@ async def add_question2(request:Request):
 async def add_question3(question:Question):
   #print(question)
   ans=ai_response(question.query)
-  db.append({"result":ans})
+  db_len=len(db)+1
+  db.update({db_len:{"result":ans,"question":question.query}})
   save_db(db)
   return ans

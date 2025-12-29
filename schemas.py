@@ -7,7 +7,8 @@ class Question(BaseModel):
 def load_db()->list[dict]:
   with open("q.json") as f:
     #return [Question.model_validate(obj) for obj in json.load(f)]
-    return [obj for obj in json.load(f)]
+    #return [obj for obj in json.load(f)]
+    return json.load(f)
 
 
 def save_db(answers:list[dict]):
