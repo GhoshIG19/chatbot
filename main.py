@@ -4,7 +4,8 @@ import json
 from schemas import load_db,save_db,Question
 
 app=FastAPI()
-#db=load_db()
+db=load_db()
+print("db",db)
 
 @app.get("/api")
 def get_question(query:str):
@@ -39,10 +40,8 @@ async def add_question2(request:Request):
 
 @app.post("/api3")
 async def add_question3(question:Question):
-  #ans=ai_response()
-  #db.append(ans)
-  #save_db(db)
-
-  print(question)
+  #print(question)
   ans=ai_response(question.query)
+  db.append({"result":ans})
+  save_db(db)
   return ans
