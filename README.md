@@ -1,3 +1,5 @@
+[gemini conversation](https://gemini.google.com/share/7d0ff1500aba)
+
 Using GitHub Models (which allows you to access models like GPT-4o, Llama 3, and Mistral via a free API) with `uv` (a fast Python project manager) is a modern and efficient workflow.
 
 Here is the step-by-step procedure to set this up.
@@ -152,6 +154,7 @@ uv add openai python-dotenv
 uv add fastapi[all]
 uv add requests httpx beautifulsoup4
 uv add markdownify 
+uv add pymongo[srv]
 
 # 2. Setup Env
 # (Create .env file manually and paste GITHUB_TOKEN=...)
@@ -181,4 +184,55 @@ git init
 git add .
 git remote set-url origin https://github.com/GhoshIG19/chatbot.git
 git push --set-upstream origin master
+```
+
+### docker setup
+```bash
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+sudo apt update
+sudo apt install docker-ce
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+### mongodb setup (using docker)
+```bash
+mkdir data
+sudo chown -R 1001:1001 /home/me/data
+docker run -d --name mongodb \
+  -p 27018:27017 \
+  -e MONGODB_ROOT_PASSWORD=mongo \
+  -e MONGODB_USERNAME=mongodb \
+  -e MONGODB_PASSWORD=mongodb \
+  -e MONGODB_DATABASE=chatbot \
+  -v /home/me/data:/bitnami/mongodb \
+  bitnami/mongodb:latest
+
+docker ps
+#docker rm -f mongodb
+docker exec -it mongodb bash
+docker logs -f mongodb
+docker exec -it mongodb mongosh "mongodb://mongodb:mongodb@localhost:27017/chatbot"
+docker exec -it mongodb  mongosh "mongodb://root:mongo@localhost:27017/chatbot?authSource=admin"
+docker start mongodb
+```
+
+### mongosh(client) setup
+```bash
+wget -qO- https://www.mongodb.org/static/pgp/server-6.0.asc | sudo tee /etc/apt/trusted.gpg.d/server-6.0.asc
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+sudo apt update
+sudo apt install -y mongodb-mongosh
+mongosh "mongodb://root:mongo@localhost:27018/chatbot?authSource=admin"
+mongosh "mongodb://mongodb:mongodb@localhost:27018/chatbot"
+```
+
+### mongodb compass(UI) setup
+```bash
+wget https://downloads.mongodb.com/compass/mongodb-compass_1.45.0_amd64.deb
+sudo apt install ./mongodb-compass_1.45.0_amd64.deb
 ```
