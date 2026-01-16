@@ -2,6 +2,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 from scrapping import response_get_markdown
+from create_chunks import get_top_similar_chunks
 # 1. Load the token from the .env file
 
 load_dotenv()
@@ -33,11 +34,16 @@ def ai_response(user_query:str)->str:
     url = 'https://lnkk.in/icc-mens-cricket-world-cup-odi/'
     response_markdown2=response_get_markdown(url)
     #print(response_markdown2)
-    
+    top_chunk_text="\n\n".join(get_top_similar_chunks(response_markdown2,user_query))
+    # prompt={
+    #     "role": "user",
+    #     "content": f"context: {response_markdown2} \nquestion: {user_query}",
+    #     }
     prompt={
         "role": "user",
-        "content": f"context: {response_markdown2} \nquestion: {user_query}",
+        "content": f"context: {top_chunk_text} \nquestion: {user_query}",
         }
+    print(prompt)
     try:
         result=""
         #print(f"Talking to {model_name} via GitHub Models...\n")

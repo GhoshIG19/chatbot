@@ -60,6 +60,7 @@ GitHub Models uses the standard OpenAI SDK for Python (it is API-compatible). Yo
 ```bash
 uv add openai python-dotenv
 
+
 ```
 
 
@@ -155,6 +156,8 @@ uv add fastapi[all]
 uv add requests httpx beautifulsoup4
 uv add markdownify 
 uv add pymongo[srv]
+uv add pandas
+uv add langchain-text-splitters
 
 # 2. Setup Env
 # (Create .env file manually and paste GITHUB_TOKEN=...)
