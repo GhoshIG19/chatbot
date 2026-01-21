@@ -2,13 +2,23 @@ import os
 import numpy as np
 from openai import OpenAI
 from dotenv import load_dotenv
-
+from sentence_transformers import SentenceTransformer, util
 
 #print(os.environ.get("GITHUB_TOKEN"),"before")
 load_dotenv()
 #print(os.environ.get("GITHUB_TOKEN"),"after")
 endpoint = "https://models.github.ai/inference"
 #endpoint="https://models.inference.ai.azure.com"
+model_name_embedding_openai="text-embedding-3-small"
+
+
+
+# Load the model (this downloads it automatically on first run)
+# For BGE: Use "BAAI/bge-small-en-v1.5" or "BAAI/bge-large-en-v1.5"
+# For MiniLM: Use "sentence-transformers/all-MiniLM-L6-v2"
+model_name_embedding_local="BAAI/bge-large-en-v1.5"
+#model_name_embedding_local="sentence-transformers/all-MiniLM-L12-v2"
+
 
 
 def cosine_similarity(vec1, vec2):
@@ -25,11 +35,11 @@ def cosine_similarity(vec1, vec2):
 
 #input=["Hello, how do I use GitHub models?", "Hello, how do I use GitHub models?"]
 
-#input=["Berlin is the capital of Germany. It has a population of 3.6 million.", "What is the capital of Germany?"]
+input=["Berlin is the capital of Germany. It has a population of 3.6 million.", "What is the capital of Germany?"]
 
 #input=["Berlin is the capital of Germany. It has a population of 3.6 million.", "What is the population of capital of Germany?"]
 
-input=["Berlin is the capital of Germany. It has a population of 3.6 million.", "What is the capital of France?"]
+#input=["Berlin is the capital of Germany. It has a population of 3.6 million.", "What is the capital of France?"]
 
 # input=["cat", "dog"]
 #input=["puppy","dog"]
@@ -47,9 +57,15 @@ def get_embeddings(input:list[str] | str):
     # 2. Call the embeddings API
     response = client.embeddings.create(
         input=input,
-        model="text-embedding-3-small"
+        model=model_name_embedding_openai
     )
     return response
+
+def get_embeddings_local(input:list[str] | str):
+  model = SentenceTransformer(model_name_embedding_local,trust_remote_code=True)
+  embeddings = model.encode(input)
+  return embeddings
+
 
 if __name__=="__main__":
     response=get_embeddings(input)
@@ -63,3 +79,6 @@ if __name__=="__main__":
     score = cosine_similarity(emb1, emb2)
     print(f"Similarity Score: {score:.4f}")
     
+    embeddings=get_embeddings_local(input)
+    score = util.cos_sim(embeddings[0], embeddings[1])
+    print(f"Similarity: {score.item():.4f}")
