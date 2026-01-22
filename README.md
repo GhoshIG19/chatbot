@@ -158,6 +158,8 @@ uv add markdownify
 uv add pymongo[srv]
 uv add pandas
 uv add langchain-text-splitters
+uv add -U sentence-transformers
+uv add ollama
 
 # 2. Setup Env
 # (Create .env file manually and paste GITHUB_TOKEN=...)
@@ -206,6 +208,7 @@ newgrp docker
 ```bash
 mkdir data
 sudo chown -R 1001:1001 /home/me/data
+#docker pull bitnami/mongodb:latest
 docker run -d --name mongodb \
   -p 27018:27017 \
   -e MONGODB_ROOT_PASSWORD=mongo \
@@ -214,7 +217,7 @@ docker run -d --name mongodb \
   -e MONGODB_DATABASE=chatbot \
   -v /home/me/data:/bitnami/mongodb \
   bitnami/mongodb:latest
-
+docker images
 docker ps
 #docker rm -f mongodb
 docker exec -it mongodb bash
@@ -238,4 +241,15 @@ mongosh "mongodb://mongodb:mongodb@localhost:27018/chatbot"
 ```bash
 wget https://downloads.mongodb.com/compass/mongodb-compass_1.45.0_amd64.deb
 sudo apt install ./mongodb-compass_1.45.0_amd64.deb
+```
+
+### running local models (via ollama)
+```bash
+sudo apt-get install zstd
+curl -fsSL https://ollama.com/install.sh | sh
+
+ollama pull gemma3:4b
+ollama run gemma3:4b
+ollama ls
+ollama ps
 ```

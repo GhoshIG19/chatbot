@@ -1,7 +1,7 @@
 import uuid
 import json
 from fastapi import FastAPI,Request,HTTPException
-from ai import ai_response
+from ai import ai_response,ai_response_cloud_ollama
 from schemas import load_db,save_db,Question
 from data.nosql.mongodb_connection import get_mongodb_connection
 from bson.objectid import ObjectId
@@ -115,7 +115,8 @@ async def add_question2(request:Request):
 @app.post("/api",status_code=201)
 async def add_question(question:Question):
   #print(question)
-  ans=ai_response(question.query)
+  #ans=ai_response(question.query)
+  ans=ai_response_cloud_ollama(question.query)
   # db_len="1"
   # if db:
   #   db_len=str(int(max(db.keys()))+1)
